@@ -30,7 +30,9 @@ public struct TaskView: View {
         
         dueDateSection
       }
+      #if !os(macOS)
       .navigationBarTitleDisplayMode(.inline)
+      #endif
       .navigationTitle(navigationTitle)
       .toolbar { toolbarContent }
     }

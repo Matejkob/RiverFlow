@@ -4,7 +4,7 @@ import Testing
 import Foundation
 
 @MainActor
-@Suite("Task View Model Unit Tests")
+@Suite("Task ViewModel Unit Tests")
 struct TaskViewModelTests {
   @Test func nameChanged() {
     

@@ -36,6 +36,7 @@
 		456DF4BD2CBEE4F100BA3E3F /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Domain; path = Packages/Domain; sourceTree = "<group>"; };
 		456DF4BF2CBEE56D00BA3E3F /* TaskListFeature */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = TaskListFeature; path = Packages/TaskListFeature; sourceTree = "<group>"; };
 		456DF4C02CBEE59100BA3E3F /* TaskFeature */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = TaskFeature; path = Packages/TaskFeature; sourceTree = "<group>"; };
+		459356972CC01477005759A8 /* MainTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MainTestPlan.xctestplan; sourceTree = "<group>"; };
 		45D968AD2CBFA23900557A43 /* DomainStyling */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = DomainStyling; path = Packages/DomainStyling; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -93,6 +94,7 @@
 				456DF4BF2CBEE56D00BA3E3F /* TaskListFeature */,
 				456DF4BD2CBEE4F100BA3E3F /* Domain */,
 				451250EC2CBECA7500FB9D2A /* App */,
+				459356972CC01477005759A8 /* MainTestPlan.xctestplan */,
 				451250FE2CBECA7700FB9D2A /* UnitTests */,
 				451251082CBECA7700FB9D2A /* UITests */,
 				456DF4C12CBF1AE300BA3E3F /* Frameworks */,

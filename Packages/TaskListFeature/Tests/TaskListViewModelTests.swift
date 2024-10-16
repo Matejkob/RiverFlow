@@ -4,7 +4,7 @@ import Testing
 import Foundation
 
 @MainActor
-@Suite("Task List View Model Unit Tests")
+@Suite("Task List ViewModel Unit Tests")
 struct TaskListViewModelTests {
   @Test func addNewButtonTapped() {
     let uuid = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
@@ -36,6 +36,15 @@ struct TaskListViewModelTests {
     sut.taskTapped(task)
     
     #expect(sut.destination == .edit(task))
+  }
+  
+  @Test func deleteTask() {
+    let sut = TaskListViewModel(tasks: [.mock, .mock2, .mock3])
+    
+    sut.deleteTask(at: IndexSet(integer: 1))
+    
+    #expect(sut.tasks.count == 2)
+    #expect(sut.tasks == [.mock, .mock3])
   }
   
   @Test func saveNewTaskButtonTapped() {

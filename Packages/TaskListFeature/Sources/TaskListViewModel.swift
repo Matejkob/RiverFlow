@@ -44,6 +44,10 @@ import TaskFeature
     destination = .edit(task)
   }
   
+  func deleteTask(at offset: IndexSet) {
+    tasks.remove(atOffsets: offset)
+  }
+  
   func saveNewTaskButtonTapped(_ task: TaskState) {
     tasks.insert(task, at: 0)
     destination = nil

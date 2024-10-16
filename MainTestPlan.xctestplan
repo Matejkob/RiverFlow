@@ -1,0 +1,58 @@
+{
+  "configurations" : [
+    {
+      "id" : "D19AC8B6-4A28-4469-A052-05010BF540A5",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:RiverFlow.xcodeproj",
+      "identifier" : "451250E92CBECA7500FB9D2A",
+      "name" : "RiverFlow"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:RiverFlow.xcodeproj",
+        "identifier" : "451250FA2CBECA7700FB9D2A",
+        "name" : "UnitTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:RiverFlow.xcodeproj",
+        "identifier" : "451251042CBECA7700FB9D2A",
+        "name" : "UITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages\/TaskListFeature",
+        "identifier" : "TaskListFeatureTests",
+        "name" : "TaskListFeatureTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages\/TaskFeature",
+        "identifier" : "TaskFeatureTests",
+        "name" : "TaskFeatureTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages\/Domain",
+        "identifier" : "DomainTests",
+        "name" : "DomainTests"
+      }
+    }
+  ],
+  "version" : 1
+}

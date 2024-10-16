@@ -13,11 +13,16 @@ public struct TaskListView: View {
   
   public var body: some View {
     NavigationStack {
-      List(viewModel.tasks) { task in
-        Button {
-          viewModel.taskTapped(task)
-        } label: {
-          TaskRowView(task: task)
+      List {
+        ForEach(viewModel.tasks) { task in
+          Button {
+            viewModel.taskTapped(task)
+          } label: {
+            TaskRowView(task: task)
+          }
+        }
+        .onDelete { index in
+          viewModel.deleteTask(at: index)
         }
       }
       .navigationTitle("Tasks")
