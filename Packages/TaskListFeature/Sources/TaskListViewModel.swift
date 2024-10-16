@@ -7,6 +7,7 @@ import TaskFeature
   @CasePathable
   public enum Destination: Equatable {
     case add(TaskState)
+    case edit(TaskState)
   }
 
   @Published var destination: Destination?
@@ -40,6 +41,7 @@ import TaskFeature
   }
   
   func taskTapped(_ task: TaskState) {
+    destination = .edit(task)
   }
   
   func saveNewTaskButtonTapped(_ task: TaskState) {
@@ -48,6 +50,16 @@ import TaskFeature
   }
   
   func cancelAddingNewTaskButtonTapped() {
+    destination = nil
+  }
+  
+  func updateTaskButtonTapped(_ task: TaskState) {
+    tasks.removeAll(where: { $0.id == task.id })
+    tasks.insert(task, at: 0)
+    destination = nil
+  }
+  
+  func cancelEditingTaskButtonTapped() {
     destination = nil
   }
 }

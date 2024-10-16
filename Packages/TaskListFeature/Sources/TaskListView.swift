@@ -36,6 +36,20 @@ public struct TaskListView: View {
           mode: .add
         )
       }
+      .sheet(item: $viewModel.destination.edit) { task in
+        TaskView(
+          viewModel: TaskViewModel(
+            task: task,
+            onSave: { taskToUpdate in
+              viewModel.updateTaskButtonTapped(taskToUpdate)
+            },
+            onCancel: {
+              viewModel.cancelEditingTaskButtonTapped()
+            }
+          ),
+          mode: .edit
+        )
+      }
       .animation(.default, value: viewModel.tasks)
     }
   }

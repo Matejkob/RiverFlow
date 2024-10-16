@@ -29,6 +29,15 @@ struct TaskListViewModelTests {
     )
   }
   
+  @Test func taskTapped() {
+    let task = TaskState.mock
+    let sut = TaskListViewModel(tasks: [task])
+    
+    sut.taskTapped(task)
+    
+    #expect(sut.destination == .edit(task))
+  }
+  
   @Test func saveNewTaskButtonTapped() {
     let task = TaskState.mock
     let sut = TaskListViewModel(tasks: [])
@@ -44,6 +53,35 @@ struct TaskListViewModelTests {
     let sut = TaskListViewModel(destination: .add(TaskState.mock))
     
     sut.cancelAddingNewTaskButtonTapped()
+    
+    #expect(sut.destination == nil)
+  }
+  
+  @Test func updateTaskButtonTapped() {
+    let task = TaskState.mock
+    let updatedTask = TaskState(
+        id: task.id,
+        name: "Updated Task",
+        priorityLevel: .high,
+        status: .inProgress,
+        dueDate: Date(timeIntervalSince1970: 1_000_555_555)
+    )
+    
+    let sut = TaskListViewModel(
+      tasks: [.mock2, task, .mock3]
+    )
+    
+    sut.updateTaskButtonTapped(updatedTask)
+    
+    #expect(sut.tasks.count == 3)
+    #expect(sut.tasks.first == updatedTask)
+    #expect(sut.destination == nil)
+  }
+  
+  @Test func cancelEditingTaskButtonTapped() {
+    let sut = TaskListViewModel(destination: .edit(TaskState.mock))
+    
+    sut.cancelEditingTaskButtonTapped()
     
     #expect(sut.destination == nil)
   }
