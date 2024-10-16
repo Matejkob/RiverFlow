@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		456DF4C32CBF1AE300BA3E3F /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 456DF4C22CBF1AE300BA3E3F /* Domain */; };
+		456DF4C52CBF1AE300BA3E3F /* TaskFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 456DF4C42CBF1AE300BA3E3F /* TaskFeature */; };
+		456DF4C72CBF1AE300BA3E3F /* TaskListFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 456DF4C62CBF1AE300BA3E3F /* TaskListFeature */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		451250FC2CBECA7700FB9D2A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +33,10 @@
 		451250EA2CBECA7500FB9D2A /* RiverFlow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RiverFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		451250FB2CBECA7700FB9D2A /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		451251052CBECA7700FB9D2A /* UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		456DF4BD2CBEE4F100BA3E3F /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Domain; path = Packages/Domain; sourceTree = "<group>"; };
+		456DF4BF2CBEE56D00BA3E3F /* TaskListFeature */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = TaskListFeature; path = Packages/TaskListFeature; sourceTree = "<group>"; };
+		456DF4C02CBEE59100BA3E3F /* TaskFeature */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = TaskFeature; path = Packages/TaskFeature; sourceTree = "<group>"; };
+		45D968AD2CBFA23900557A43 /* DomainStyling */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = DomainStyling; path = Packages/DomainStyling; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -52,6 +62,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				456DF4C52CBF1AE300BA3E3F /* TaskFeature in Frameworks */,
+				456DF4C32CBF1AE300BA3E3F /* Domain in Frameworks */,
+				456DF4C72CBF1AE300BA3E3F /* TaskListFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,9 +88,14 @@
 		451250E12CBECA7500FB9D2A = {
 			isa = PBXGroup;
 			children = (
+				45D968AD2CBFA23900557A43 /* DomainStyling */,
+				456DF4C02CBEE59100BA3E3F /* TaskFeature */,
+				456DF4BF2CBEE56D00BA3E3F /* TaskListFeature */,
+				456DF4BD2CBEE4F100BA3E3F /* Domain */,
 				451250EC2CBECA7500FB9D2A /* App */,
 				451250FE2CBECA7700FB9D2A /* UnitTests */,
 				451251082CBECA7700FB9D2A /* UITests */,
+				456DF4C12CBF1AE300BA3E3F /* Frameworks */,
 				451250EB2CBECA7500FB9D2A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +108,13 @@
 				451251052CBECA7700FB9D2A /* UITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		456DF4C12CBF1AE300BA3E3F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -112,6 +137,9 @@
 			);
 			name = RiverFlow;
 			packageProductDependencies = (
+				456DF4C22CBF1AE300BA3E3F /* Domain */,
+				456DF4C42CBF1AE300BA3E3F /* TaskFeature */,
+				456DF4C62CBF1AE300BA3E3F /* TaskListFeature */,
 			);
 			productName = RiverFlow;
 			productReference = 451250EA2CBECA7500FB9D2A /* RiverFlow.app */;
@@ -326,7 +354,9 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -380,6 +410,8 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
 		};
@@ -414,7 +446,6 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 1.3;
 			};
@@ -451,7 +482,6 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 1.3;
 			};
@@ -472,7 +502,6 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RiverFlow.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RiverFlow";
 				XROS_DEPLOYMENT_TARGET = 2.0;
@@ -494,7 +523,6 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RiverFlow.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RiverFlow";
 				XROS_DEPLOYMENT_TARGET = 2.0;
@@ -515,7 +543,6 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_TARGET_NAME = RiverFlow;
 				XROS_DEPLOYMENT_TARGET = 2.0;
@@ -536,7 +563,6 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_TARGET_NAME = RiverFlow;
 				XROS_DEPLOYMENT_TARGET = 2.0;
@@ -583,6 +609,21 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		456DF4C22CBF1AE300BA3E3F /* Domain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Domain;
+		};
+		456DF4C42CBF1AE300BA3E3F /* TaskFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TaskFeature;
+		};
+		456DF4C62CBF1AE300BA3E3F /* TaskListFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TaskListFeature;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 451250E22CBECA7500FB9D2A /* Project object */;
 }
