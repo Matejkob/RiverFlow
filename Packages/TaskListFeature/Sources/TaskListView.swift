@@ -4,6 +4,7 @@ import DomainStyling
 import SwiftUINavigation
 import TaskFeature
 import InMemoryTaskRepository
+import DefaultUserPreferencesRepository
 
 public struct TaskListView: View {
   @ObservedObject private var viewModel: TaskListViewModel
@@ -119,7 +120,8 @@ public struct TaskListView: View {
 #Preview {
   TaskListView(
     viewModel: TaskListViewModel(
-      taskRepository: .inMemory
+      taskRepository: .inMemory,
+      userPreferencesRepository: .userDefaults
     )
   )
 }

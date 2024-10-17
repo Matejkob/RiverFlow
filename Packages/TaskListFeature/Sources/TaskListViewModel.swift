@@ -3,6 +3,8 @@ import Foundation
 import CasePaths
 import TaskFeature
 import TaskRepository
+import UserPreferencesRepository
+import Combine
 
 @MainActor public final class TaskListViewModel: ObservableObject, Sendable {
   @CasePathable
@@ -17,19 +19,45 @@ import TaskRepository
   @Published var selectedSortOrder: TaskSortOrder = .creationDateAscending
   
   private let taskRepository: TaskRepository
+  private var userPreferencesRepository: UserPreferencesRepository
   private let uuid: () -> UUID
   private let now: () -> Date
+  
+  private var cancellables: Set<AnyCancellable> = []
 
   public init(
     destination: Destination? = nil,
     taskRepository: TaskRepository,
+    userPreferencesRepository: UserPreferencesRepository,
     uuid: @escaping () -> UUID = UUID.init,
     now: @escaping () -> Date = { Date.now }
   ) {
     self.destination = destination
     self.taskRepository = taskRepository
+    self.userPreferencesRepository = userPreferencesRepository
     self.uuid = uuid
     self.now = now
+    
+    bindUserPreferences()
+  }
+  
+  private func bindUserPreferences() {
+    selectedPriorityLevelFilter = userPreferencesRepository.selectedPriorityLevelFilter
+    selectedSortOrder = userPreferencesRepository.selectedSortOrder
+    
+    $selectedSortOrder
+      .removeDuplicates()
+      .sink { [weak self] newValue in
+        self?.userPreferencesRepository.selectedSortOrder = newValue
+      }
+      .store(in: &cancellables)
+    
+    $selectedPriorityLevelFilter
+      .removeDuplicates()
+      .sink { [weak self] newValue in
+        self?.userPreferencesRepository.selectedPriorityLevelFilter = newValue
+      }
+      .store(in: &cancellables)
   }
   
   func onAppear() async {

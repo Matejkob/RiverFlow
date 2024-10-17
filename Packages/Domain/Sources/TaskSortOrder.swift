@@ -1,4 +1,4 @@
-public enum TaskSortOrder: CaseIterable, Identifiable, Hashable, Equatable, Sendable {
+public enum TaskSortOrder: String, CaseIterable, Identifiable, Hashable, Equatable, Sendable {
   case creationDateAscending
   case creationDateDescending
   case dueDateAscending

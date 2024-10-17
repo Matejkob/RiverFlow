@@ -31,6 +31,8 @@ let package = Package(
         "TaskFeature",
         .product(name: "TaskRepository", package: "PersistenceStore"),
         .product(name: "InMemoryTaskRepository", package: "PersistenceStore"),
+        .product(name: "UserPreferencesRepository", package: "PersistenceStore"),
+        .product(name: "DefaultUserPreferencesRepository", package: "PersistenceStore"),
         .product(name: "CasePaths", package: "swift-case-paths"),
         .product(name: "SwiftUINavigation", package: "swift-navigation"),
       ],

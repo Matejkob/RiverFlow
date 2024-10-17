@@ -1,6 +1,7 @@
 import SwiftUI
 import TaskListFeature
 import GRDBTaskRepository
+import DefaultUserPreferencesRepository
 
 @main
 struct RiverFlowApp: App {
@@ -8,7 +9,8 @@ struct RiverFlowApp: App {
     WindowGroup {
       TaskListView(
         viewModel: TaskListViewModel(
-          taskRepository: .GRDB
+          taskRepository: .GRDB,
+          userPreferencesRepository: .userDefaults
         )
       )
     }

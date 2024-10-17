@@ -21,6 +21,14 @@ let package = Package(
       name: "TaskRepository",
       targets: ["TaskRepository"]
     ),
+    .library(
+      name: "DefaultUserPreferencesRepository",
+      targets: ["DefaultUserPreferencesRepository"]
+    ),
+    .library(
+      name: "UserPreferencesRepository",
+      targets: ["UserPreferencesRepository"]
+    ),
   ],
   dependencies: [
     .package(path: "../Domain"),
@@ -44,6 +52,19 @@ let package = Package(
     ),
     .target(
       name: "TaskRepository",
+      dependencies: [
+        "Domain",
+      ]
+    ),
+    .target(
+      name: "DefaultUserPreferencesRepository",
+      dependencies: [
+        "UserPreferencesRepository",
+        "Domain"
+      ]
+    ),
+    .target(
+      name: "UserPreferencesRepository",
       dependencies: [
         "Domain",
       ]
