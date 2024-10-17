@@ -61,7 +61,8 @@ extension TaskState {
     name: "Hire Mateusz Bąk",
     priorityLevel: .low,
     status: .inProgress,
-    dueDate: Date(timeIntervalSince1970: 1_000_000_000)
+    dueDate: Date(timeIntervalSince1970: 1_000_000_000),
+    creationDate: Date(timeIntervalSince1970: 800_000_000)
   )
 }
 

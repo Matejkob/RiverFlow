@@ -121,7 +121,8 @@ public struct TaskView: View {
         name: "Finish todo app",
         priorityLevel: .high,
         status: .inProgress,
-        dueDate: Date() + 60 * 60
+        dueDate: Date() + 60 * 60,
+        creationDate: Date()
       ),
       onSave: { _ in },
       onCancel: { }

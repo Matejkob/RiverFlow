@@ -51,7 +51,8 @@ struct TaskRowView: View {
         name: "Hire Mateusz Bąk",
         priorityLevel: .high,
         status: .inProgress,
-        dueDate: Date() + 60 * 60 * 4
+        dueDate: Date() + 60 * 60 * 4,
+        creationDate: Date()
       )
     )
     TaskRowView(
@@ -60,7 +61,8 @@ struct TaskRowView: View {
         name: "Hire Mateusz Bąk",
         priorityLevel: .medium,
         status: .pending,
-        dueDate: Date() + 60 * 60 * 4
+        dueDate: Date() + 60 * 60 * 4,
+        creationDate: Date()
       )
     )
     TaskRowView(
@@ -69,7 +71,8 @@ struct TaskRowView: View {
         name: "Hire Mateusz Bąk",
         priorityLevel: .low,
         status: .completed(completionDate: Date()),
-        dueDate: Date() + 60 * 60 * 4
+        dueDate: Date() + 60 * 60 * 4,
+        creationDate: Date()
       )
     )
   }
