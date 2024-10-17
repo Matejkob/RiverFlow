@@ -7,9 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		456DF4C32CBF1AE300BA3E3F /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 456DF4C22CBF1AE300BA3E3F /* Domain */; };
-		456DF4C52CBF1AE300BA3E3F /* TaskFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 456DF4C42CBF1AE300BA3E3F /* TaskFeature */; };
-		456DF4C72CBF1AE300BA3E3F /* TaskListFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 456DF4C62CBF1AE300BA3E3F /* TaskListFeature */; };
+		4522F5092CC11CE900870BFE /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 4522F5082CC11CE900870BFE /* Domain */; };
+		4522F50B2CC11CE900870BFE /* DomainStyling in Frameworks */ = {isa = PBXBuildFile; productRef = 4522F50A2CC11CE900870BFE /* DomainStyling */; };
+		4522F50D2CC11CE900870BFE /* GRDBTaskRepository in Frameworks */ = {isa = PBXBuildFile; productRef = 4522F50C2CC11CE900870BFE /* GRDBTaskRepository */; };
+		4522F50F2CC11CE900870BFE /* InMemoryTaskRepository in Frameworks */ = {isa = PBXBuildFile; productRef = 4522F50E2CC11CE900870BFE /* InMemoryTaskRepository */; };
+		4522F5112CC11CE900870BFE /* TaskRepository in Frameworks */ = {isa = PBXBuildFile; productRef = 4522F5102CC11CE900870BFE /* TaskRepository */; };
+		4522F5132CC11CE900870BFE /* TaskFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 4522F5122CC11CE900870BFE /* TaskFeature */; };
+		4522F5152CC11CE900870BFE /* TaskListFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 4522F5142CC11CE900870BFE /* TaskListFeature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +41,7 @@
 		456DF4BF2CBEE56D00BA3E3F /* TaskListFeature */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = TaskListFeature; path = Packages/TaskListFeature; sourceTree = "<group>"; };
 		456DF4C02CBEE59100BA3E3F /* TaskFeature */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = TaskFeature; path = Packages/TaskFeature; sourceTree = "<group>"; };
 		459356972CC01477005759A8 /* MainTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MainTestPlan.xctestplan; sourceTree = "<group>"; };
+		45AF27832CC0FE30006E845A /* PersistenceStore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = PersistenceStore; path = Packages/PersistenceStore; sourceTree = "<group>"; };
 		45D968AD2CBFA23900557A43 /* DomainStyling */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = DomainStyling; path = Packages/DomainStyling; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -63,9 +68,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				456DF4C52CBF1AE300BA3E3F /* TaskFeature in Frameworks */,
-				456DF4C32CBF1AE300BA3E3F /* Domain in Frameworks */,
-				456DF4C72CBF1AE300BA3E3F /* TaskListFeature in Frameworks */,
+				4522F5132CC11CE900870BFE /* TaskFeature in Frameworks */,
+				4522F5092CC11CE900870BFE /* Domain in Frameworks */,
+				4522F50F2CC11CE900870BFE /* InMemoryTaskRepository in Frameworks */,
+				4522F50D2CC11CE900870BFE /* GRDBTaskRepository in Frameworks */,
+				4522F50B2CC11CE900870BFE /* DomainStyling in Frameworks */,
+				4522F5152CC11CE900870BFE /* TaskListFeature in Frameworks */,
+				4522F5112CC11CE900870BFE /* TaskRepository in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +98,7 @@
 		451250E12CBECA7500FB9D2A = {
 			isa = PBXGroup;
 			children = (
+				45AF27832CC0FE30006E845A /* PersistenceStore */,
 				456DF4BD2CBEE4F100BA3E3F /* Domain */,
 				45D968AD2CBFA23900557A43 /* DomainStyling */,
 				456DF4C02CBEE59100BA3E3F /* TaskFeature */,
@@ -139,9 +149,13 @@
 			);
 			name = RiverFlow;
 			packageProductDependencies = (
-				456DF4C22CBF1AE300BA3E3F /* Domain */,
-				456DF4C42CBF1AE300BA3E3F /* TaskFeature */,
-				456DF4C62CBF1AE300BA3E3F /* TaskListFeature */,
+				4522F5082CC11CE900870BFE /* Domain */,
+				4522F50A2CC11CE900870BFE /* DomainStyling */,
+				4522F50C2CC11CE900870BFE /* GRDBTaskRepository */,
+				4522F50E2CC11CE900870BFE /* InMemoryTaskRepository */,
+				4522F5102CC11CE900870BFE /* TaskRepository */,
+				4522F5122CC11CE900870BFE /* TaskFeature */,
+				4522F5142CC11CE900870BFE /* TaskListFeature */,
 			);
 			productName = RiverFlow;
 			productReference = 451250EA2CBECA7500FB9D2A /* RiverFlow.app */;
@@ -426,6 +440,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"App/Preview Content\"";
+				DEVELOPMENT_TEAM = 9RSVCT9A9H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = RiverFlow;
@@ -462,6 +477,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"App/Preview Content\"";
+				DEVELOPMENT_TEAM = 9RSVCT9A9H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = RiverFlow;
@@ -613,15 +629,31 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		456DF4C22CBF1AE300BA3E3F /* Domain */ = {
+		4522F5082CC11CE900870BFE /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Domain;
 		};
-		456DF4C42CBF1AE300BA3E3F /* TaskFeature */ = {
+		4522F50A2CC11CE900870BFE /* DomainStyling */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DomainStyling;
+		};
+		4522F50C2CC11CE900870BFE /* GRDBTaskRepository */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GRDBTaskRepository;
+		};
+		4522F50E2CC11CE900870BFE /* InMemoryTaskRepository */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = InMemoryTaskRepository;
+		};
+		4522F5102CC11CE900870BFE /* TaskRepository */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TaskRepository;
+		};
+		4522F5122CC11CE900870BFE /* TaskFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TaskFeature;
 		};
-		456DF4C62CBF1AE300BA3E3F /* TaskListFeature */ = {
+		4522F5142CC11CE900870BFE /* TaskListFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TaskListFeature;
 		};

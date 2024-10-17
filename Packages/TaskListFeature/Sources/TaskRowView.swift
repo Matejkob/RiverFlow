@@ -52,7 +52,8 @@ struct TaskRowView: View {
         priorityLevel: .high,
         status: .inProgress,
         dueDate: Date() + 60 * 60 * 4,
-        creationDate: Date()
+        creationDate: Date(),
+        category: nil
       )
     )
     TaskRowView(
@@ -62,7 +63,8 @@ struct TaskRowView: View {
         priorityLevel: .medium,
         status: .pending,
         dueDate: Date() + 60 * 60 * 4,
-        creationDate: Date()
+        creationDate: Date(),
+        category: TaskCategory(id: UUID(), name: "Work")
       )
     )
     TaskRowView(
@@ -72,7 +74,8 @@ struct TaskRowView: View {
         priorityLevel: .low,
         status: .completed(completionDate: Date()),
         dueDate: Date() + 60 * 60 * 4,
-        creationDate: Date()
+        creationDate: Date(),
+        category: TaskCategory(id: UUID(), name: "Personal")
       )
     )
   }

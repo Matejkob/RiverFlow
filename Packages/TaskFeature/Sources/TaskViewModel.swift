@@ -12,7 +12,7 @@ import CasePaths
   @Published var task: TaskState
   @Published var destination: Destination?
   
-  private let onSave: (TaskState) -> Void
+  private let onSave: (TaskState) async -> Void
   private let onCancel: () -> Void
   private let taskNameValidator: TaskNameValidatorProtocol
   private let taskDueDateValidator: TaskDueDateValidatorProtocol
@@ -20,7 +20,7 @@ import CasePaths
   public init(
     task: TaskState,
     destination: Destination? = nil,
-    onSave: @escaping (TaskState) -> Void,
+    onSave: @escaping (TaskState) async -> Void,
     onCancel: @escaping () -> Void,
     taskNameValidator: TaskNameValidatorProtocol = TaskNameValidator(),
     taskDueDateValidator: TaskDueDateValidatorProtocol = TaskDueDateValidator()
@@ -45,7 +45,7 @@ import CasePaths
     task.dueDate = dueDate
   }
   
-  func saveButtonTapped() {
+  func saveButtonTapped() async {
     if case let .failure(message) = taskNameValidator.validate(task.name) {
       destination = .validationAlert(message: message)
       return
@@ -56,7 +56,7 @@ import CasePaths
       return
     }
     
-    onSave(task)
+    await onSave(task)
   }
   
   func cancelButtonTapped() {

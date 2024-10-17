@@ -108,7 +108,9 @@ public struct TaskView: View {
   @ToolbarContentBuilder
   private var toolbarContent: some ToolbarContent {
     ToolbarItem(placement: .confirmationAction) {
-      Button("Save", action: viewModel.saveButtonTapped)
+      Button("Save") {
+        Task { await viewModel.saveButtonTapped() }
+      }
     }
     
     ToolbarItem(placement: .cancellationAction) {
@@ -133,7 +135,8 @@ public struct TaskView: View {
         priorityLevel: .high,
         status: .inProgress,
         dueDate: Date() + 60 * 60,
-        creationDate: Date()
+        creationDate: Date(),
+        category: TaskCategory(id: UUID(), name: "Work")
       ),
       onSave: { _ in },
       onCancel: { }

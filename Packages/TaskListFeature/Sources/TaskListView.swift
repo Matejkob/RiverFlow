@@ -3,6 +3,7 @@ import Domain
 import DomainStyling
 import SwiftUINavigation
 import TaskFeature
+import InMemoryTaskRepository
 
 public struct TaskListView: View {
   @ObservedObject private var viewModel: TaskListViewModel
@@ -22,7 +23,7 @@ public struct TaskListView: View {
           }
         }
         .onDelete { index in
-          viewModel.deleteTask(at: index)
+          Task { await viewModel.deleteTask(at: index) }
         }
       }
       .navigationTitle("Tasks")
@@ -32,7 +33,7 @@ public struct TaskListView: View {
           viewModel: TaskViewModel(
             task: task,
             onSave: { taskToSave in
-              viewModel.saveNewTaskButtonTapped(task)
+              await viewModel.saveNewTaskButtonTapped(taskToSave)
             },
             onCancel: {
               viewModel.cancelAddingNewTaskButtonTapped()
@@ -46,7 +47,7 @@ public struct TaskListView: View {
           viewModel: TaskViewModel(
             task: task,
             onSave: { taskToUpdate in
-              viewModel.updateTaskButtonTapped(taskToUpdate)
+              await viewModel.updateTaskButtonTapped(taskToUpdate)
             },
             onCancel: {
               viewModel.cancelEditingTaskButtonTapped()
@@ -56,6 +57,9 @@ public struct TaskListView: View {
         )
       }
       .animation(.default, value: viewModel.filteredTasks)
+    }
+    .task {
+      await viewModel.onAppear()
     }
   }
   
@@ -76,7 +80,9 @@ public struct TaskListView: View {
             "Sorting",
             selection: Binding(
               get: { viewModel.selectedSortOrder },
-              set: { viewModel.changeSortOrder(to: $0) }
+              set: { newValue in
+                Task { await viewModel.changeSortOrder(to: newValue) }
+              }
             )
           ) {
             ForEach(TaskSortOrder.allCases) { sortOrder in
@@ -89,7 +95,9 @@ public struct TaskListView: View {
             "Filtering",
             selection: Binding(
               get: { viewModel.selectedPriorityLevelFilter },
-              set: { viewModel.changePriorityLevelFilter(to: $0) }
+              set: { newValue in
+                Task { await viewModel.changePriorityLevelFilter(to: newValue)}
+              }
             )
           ) {
             Text("All")
@@ -111,32 +119,7 @@ public struct TaskListView: View {
 #Preview {
   TaskListView(
     viewModel: TaskListViewModel(
-      tasks: [
-        TaskState(
-          id: UUID(),
-          name: "name 1",
-          priorityLevel: .high,
-          status: .inProgress,
-          dueDate: Date() + 60,
-          creationDate: Date()
-        ),
-        TaskState(
-          id: UUID(),
-          name: "name 2",
-          priorityLevel: .medium,
-          status: .inProgress,
-          dueDate: Date() + 60 * 2,
-          creationDate: Date()
-        ),
-        TaskState(
-          id: UUID(),
-          name: "name 3",
-          priorityLevel: .low,
-          status: .inProgress,
-          dueDate: Date() + 60 * 3,
-          creationDate: Date()
-        )
-      ]
+      taskRepository: .inMemory
     )
   )
 }

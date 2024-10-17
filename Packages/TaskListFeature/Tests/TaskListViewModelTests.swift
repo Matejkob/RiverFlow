@@ -2,6 +2,7 @@ import Testing
 @testable import Domain
 @testable import TaskListFeature
 import Foundation
+@testable import InMemoryTaskRepository
 
 @MainActor
 @Suite("Task List ViewModel Unit Tests")
@@ -10,6 +11,7 @@ struct TaskListViewModelTests {
     let uuid = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
     let now = Date(timeIntervalSince1970: 0)
     let sut = TaskListViewModel(
+      taskRepository: .inMemory,
       uuid: { uuid },
       now: { now }
     )
@@ -24,44 +26,55 @@ struct TaskListViewModelTests {
           priorityLevel: .low,
           status: .pending,
           dueDate: now + 60 * 60 * 24,
-          creationDate: now
+          creationDate: now,
+          category: nil
         )
       )
     )
   }
   
-  @Test func taskTapped() {
+  @Test func taskTapped() async {
     let task = TaskState.mock
-    let sut = TaskListViewModel(tasks: [task])
+    let sut = TaskListViewModel(taskRepository: InMemoryTaskRepository(tasks: [task]))
+    
+    await sut.onAppear() // Load data
     
     sut.taskTapped(task)
     
     #expect(sut.destination == .edit(task))
   }
   
-  @Test func deleteTask() {
-    let sut = TaskListViewModel(tasks: [.mock, .mock2, .mock3])
+  @Test func deleteTask() async {
+    let sut = TaskListViewModel(
+      taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3])
+    )
     
-    sut.deleteTask(at: [1])
+    await sut.onAppear() // Load data
+    
+    await sut.deleteTask(at: [1])
     
     #expect(sut.filteredTasks.count == 2)
     #expect(sut.filteredTasks == [.mock, .mock3])
   }
   
-  @Test func deleteTasksRange() {
-    let sut = TaskListViewModel(tasks: [.mock, .mock2, .mock3])
+  @Test func deleteTasksRange() async {
+    let sut = TaskListViewModel(
+      taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3])
+    )
+    
+    await sut.onAppear() // Load data
 
-    sut.deleteTask(at: [0, 2])
+    await sut.deleteTask(at: [0, 2])
     
     #expect(sut.filteredTasks.count == 1)
     #expect(sut.filteredTasks == [.mock2])
   }
   
-  @Test func saveNewTaskButtonTapped() {
+  @Test func saveNewTaskButtonTapped() async {
     let task = TaskState.mock
-    let sut = TaskListViewModel(tasks: [])
+    let sut = TaskListViewModel(taskRepository: InMemoryTaskRepository(tasks: []))
     
-    sut.saveNewTaskButtonTapped(task)
+    await sut.saveNewTaskButtonTapped(task)
     
     #expect(sut.filteredTasks.count == 1)
     #expect(sut.filteredTasks.first == task)
@@ -69,14 +82,17 @@ struct TaskListViewModelTests {
   }
   
   @Test func cancelAddingNewTaskButtonTapped() {
-    let sut = TaskListViewModel(destination: .add(TaskState.mock))
+    let sut = TaskListViewModel(
+      destination: .add(TaskState.mock),
+      taskRepository: .inMemory
+    )
     
     sut.cancelAddingNewTaskButtonTapped()
     
     #expect(sut.destination == nil)
   }
   
-  @Test func updateTaskButtonTapped() {
+  @Test func updateTaskButtonTapped() async {
     let task = TaskState.mock
     let updatedTask = TaskState(
         id: task.id,
@@ -84,14 +100,17 @@ struct TaskListViewModelTests {
         priorityLevel: .high,
         status: .inProgress,
         dueDate: Date(timeIntervalSince1970: 1_000_555_555),
-        creationDate: Date(timeIntervalSince1970: 850_000_000)
+        creationDate: Date(timeIntervalSince1970: 850_000_000),
+        category: nil
     )
     
     let sut = TaskListViewModel(
-      tasks: [.mock2, task, .mock3]
+      taskRepository: InMemoryTaskRepository(tasks: [.mock2, task, .mock3])
     )
     
-    sut.updateTaskButtonTapped(updatedTask)
+    await sut.onAppear() // Load data
+    
+    await sut.updateTaskButtonTapped(updatedTask)
     
     #expect(sut.filteredTasks.count == 3)
     #expect(sut.filteredTasks == [.mock2, updatedTask, .mock3])
@@ -99,7 +118,7 @@ struct TaskListViewModelTests {
   }
   
   @Test func cancelEditingTaskButtonTapped() {
-    let sut = TaskListViewModel(destination: .edit(TaskState.mock))
+    let sut = TaskListViewModel(destination: .edit(TaskState.mock), taskRepository: .inMemory)
     
     sut.cancelEditingTaskButtonTapped()
     
@@ -108,94 +127,114 @@ struct TaskListViewModelTests {
 
   // MARK: - Sorting Tests
   
-  @Test func changeSortOrderToDueDateAscending() {
-    let sut = TaskListViewModel(tasks: [.mock, .mock2, .mock3])
+  @Test func changeSortOrderToDueDateAscending() async {
+    let sut = TaskListViewModel(
+      taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3])
+    )
     
-    sut.changeSortOrder(to: .dueDateAscending)
+    await sut.changeSortOrder(to: .dueDateAscending)
     
     #expect(sut.filteredTasks == [.mock, .mock2, .mock3])
   }
   
-  @Test func changeSortOrderToDueDateDescending() {
-    let sut = TaskListViewModel(tasks: [.mock, .mock2, .mock3])
+  @Test func changeSortOrderToDueDateDescending() async {
+    let sut = TaskListViewModel(
+      taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3])
+    )
     
-    sut.changeSortOrder(to: .dueDateDescending)
+    await sut.changeSortOrder(to: .dueDateDescending)
     
     #expect(sut.filteredTasks == [.mock3, .mock2, .mock])
   }
   
-  @Test func changeSortOrderToPriorityAscending() {
+  @Test func changeSortOrderToPriorityAscending() async {
     let task1 = TaskState.mock // Low
     let task2 = TaskState.mockHighPriority
     let task3 = TaskState.mockMediumPriority
-    let sut = TaskListViewModel(tasks: [task1, task2, task3])
+    let sut = TaskListViewModel(
+      taskRepository: InMemoryTaskRepository(tasks: [task1, task2, task3])
+    )
     
-    sut.changeSortOrder(to: .priorityAscending)
+    await sut.changeSortOrder(to: .priorityAscending)
     
     #expect(sut.filteredTasks == [task1, task3, task2])
   }
   
-  @Test func changeSortOrderToPriorityDescending() {
+  @Test func changeSortOrderToPriorityDescending() async {
     let task1 = TaskState.mock // Low
     let task2 = TaskState.mockHighPriority
     let task3 = TaskState.mockMediumPriority
-    let sut = TaskListViewModel(tasks: [task1, task2, task3])
+    let sut = TaskListViewModel(
+      taskRepository: InMemoryTaskRepository(tasks: [task1, task2, task3])
+    )
     
-    sut.changeSortOrder(to: .priorityDescending)
+    await sut.changeSortOrder(to: .priorityDescending)
     
     #expect(sut.filteredTasks == [task2, task3, task1])
   }
   
-  @Test func changeSortOrderToCreationDateAscending() {
-    let sut = TaskListViewModel(tasks: [.mock, .mock2, .mock3])
+  @Test func changeSortOrderToCreationDateAscending() async {
+    let sut = TaskListViewModel(
+      taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3])
+    )
     
-    sut.changeSortOrder(to: .creationDateAscending)
+    await sut.changeSortOrder(to: .creationDateAscending)
     
     #expect(sut.filteredTasks == [.mock, .mock2, .mock3])
   }
   
-  @Test func changeSortOrderToCreationDateDescending() {
-    let sut = TaskListViewModel(tasks: [.mock, .mock2, .mock3])
-    
-    sut.changeSortOrder(to: .creationDateDescending)
+  @Test func changeSortOrderToCreationDateDescending() async {
+    let sut = TaskListViewModel(
+      taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3])
+    )
+
+    await sut.changeSortOrder(to: .creationDateDescending)
     
     #expect(sut.filteredTasks == [.mock3, .mock2, .mock])
   }
   
   // MARK: - Filtering Tests
   
-  @Test func changePriorityLevelFilter() {
-    let sut = TaskListViewModel(tasks: [.mock, .mock2, .mock3])
-    
-    sut.changePriorityLevelFilter(to: .low)
+  @Test func changePriorityLevelFilter() async {
+    let sut = TaskListViewModel(
+      taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3])
+    )
+
+    await sut.changePriorityLevelFilter(to: .low)
     
     #expect(sut.filteredTasks == [.mock, .mock2, .mock3])
   }
   
-  @Test func changePriorityLevelFilterToHigh() {
-    let sut = TaskListViewModel(tasks: [.mock, .mock2, .mock3])
-    
-    sut.changePriorityLevelFilter(to: .high)
+  @Test func changePriorityLevelFilterToHigh() async {
+    let sut = TaskListViewModel(
+      taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3])
+    )
+
+    await sut.changePriorityLevelFilter(to: .high)
     
     #expect(sut.filteredTasks.isEmpty)
   }
   
-  @Test func changePriorityLevelFilterToMedium() {
+  @Test func changePriorityLevelFilterToMedium() async {
     let task1 = TaskState.mock
     let task2 = TaskState.mockMediumPriority
-    let sut = TaskListViewModel(tasks: [task1, task2, .mock3])
-    
-    sut.changePriorityLevelFilter(to: .medium)
+    let sut = TaskListViewModel(
+      taskRepository: InMemoryTaskRepository(tasks: [task1, task2, .mock3])
+    )
+
+    await sut.changePriorityLevelFilter(to: .medium)
     
     #expect(sut.filteredTasks == [task2])
   }
   
-  @Test func clearPriorityLevelFilter() {
-    let sut = TaskListViewModel(tasks: [.mock, .mock2, .mock3])
+  @Test func clearPriorityLevelFilter() async {
+    let sut = TaskListViewModel(
+      taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3])
+    )
     
-    sut.changePriorityLevelFilter(to: .low)
+    await sut.changePriorityLevelFilter(to: .low)
     
-    sut.changePriorityLevelFilter(to: nil)
+    await sut.changePriorityLevelFilter(to: nil)
     
     #expect(sut.filteredTasks == [.mock, .mock2, .mock3])
   }
@@ -210,7 +249,8 @@ extension TaskState {
     priorityLevel: .low,
     status: .inProgress,
     dueDate: Date(timeIntervalSince1970: 1_000_000_000),
-    creationDate: Date(timeIntervalSince1970: 700_000_000)
+    creationDate: Date(timeIntervalSince1970: 700_000_000),
+    category: nil
   )
   
   @MainActor static let mock2 = TaskState(
@@ -219,7 +259,8 @@ extension TaskState {
     priorityLevel: .low,
     status: .inProgress,
     dueDate: Date(timeIntervalSince1970: 1_100_000_000),
-    creationDate: Date(timeIntervalSince1970: 800_000_000)
+    creationDate: Date(timeIntervalSince1970: 800_000_000),
+    category: nil
   )
   
   @MainActor static let mock3 = TaskState(
@@ -228,7 +269,8 @@ extension TaskState {
     priorityLevel: .low,
     status: .inProgress,
     dueDate: Date(timeIntervalSince1970: 1_200_000_000),
-    creationDate: Date(timeIntervalSince1970: 900_000_000)
+    creationDate: Date(timeIntervalSince1970: 900_000_000),
+    category: nil
   )
 
   @MainActor static let mockHighPriority = TaskState(
@@ -237,7 +279,8 @@ extension TaskState {
     priorityLevel: .high,
     status: .pending,
     dueDate: Date(timeIntervalSince1970: 1_000_000_000),
-    creationDate: Date(timeIntervalSince1970: 800_000_000)
+    creationDate: Date(timeIntervalSince1970: 800_000_000),
+    category: nil
   )
 
   @MainActor static let mockMediumPriority = TaskState(
@@ -246,6 +289,7 @@ extension TaskState {
     priorityLevel: .medium,
     status: .pending,
     dueDate: Date(timeIntervalSince1970: 1_000_000_000),
-    creationDate: Date(timeIntervalSince1970: 900_000_000)
+    creationDate: Date(timeIntervalSince1970: 900_000_000),
+    category: nil
   )
 }

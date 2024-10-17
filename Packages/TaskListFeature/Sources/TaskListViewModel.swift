@@ -2,36 +2,38 @@ import Domain
 import Foundation
 import CasePaths
 import TaskFeature
+import TaskRepository
 
-@MainActor public final class TaskListViewModel: ObservableObject {
+@MainActor public final class TaskListViewModel: ObservableObject, Sendable {
   @CasePathable
   public enum Destination: Equatable {
     case add(TaskState)
     case edit(TaskState)
   }
-
-  private var tasks: [TaskState]
   
   @Published var destination: Destination?
   @Published var filteredTasks: [TaskState] = []
   @Published var selectedPriorityLevelFilter: TaskPiorityLevel?
   @Published var selectedSortOrder: TaskSortOrder = .creationDateAscending
   
+  private let taskRepository: TaskRepository
   private let uuid: () -> UUID
   private let now: () -> Date
 
   public init(
-    tasks: [TaskState] = [],
     destination: Destination? = nil,
+    taskRepository: TaskRepository,
     uuid: @escaping () -> UUID = UUID.init,
     now: @escaping () -> Date = { Date.now }
   ) {
-    self.tasks = tasks
     self.destination = destination
+    self.taskRepository = taskRepository
     self.uuid = uuid
     self.now = now
-    
-    applyFilters()
+  }
+  
+  func onAppear() async {
+    await updateTasksList()
   }
   
   func addNewButtonTapped() {
@@ -42,7 +44,8 @@ import TaskFeature
         priorityLevel: .low,
         status: .pending,
         dueDate: now() + 60 * 60 * 24,
-        creationDate: now()
+        creationDate: now(),
+        category: nil
       )
     )
   }
@@ -51,20 +54,23 @@ import TaskFeature
     destination = .edit(task)
   }
   
-  func deleteTask(at offsets: IndexSet) {
+  func deleteTask(at offsets: IndexSet) async {
     let taskToDelete = offsets.map { filteredTasks[$0] }
     
     filteredTasks.remove(atOffsets: offsets)
     
     for task in taskToDelete {
-      tasks.removeAll(where: { $0.id == task.id })
+      try? await taskRepository.deleteTask(task)
     }
+    
+    // We don't need to fetch tasks here again
+    // since UI has been already updated
   }
   
-  func saveNewTaskButtonTapped(_ task: TaskState) {
-    tasks.append(task)
+  func saveNewTaskButtonTapped(_ task: TaskState) async {
+    try? await taskRepository.saveTask(task)
     
-    applyFilters() // Re-apply filter after adding new task
+    await updateTasksList()
     
     destination = nil
   }
@@ -73,16 +79,12 @@ import TaskFeature
     destination = nil
   }
   
-  func updateTaskButtonTapped(_ task: TaskState) {
-    defer { destination = nil }
+  func updateTaskButtonTapped(_ task: TaskState) async {
+    try? await taskRepository.updateTask(task)
     
-    guard let index = tasks.firstIndex(where: { $0.id == task.id }) else {
-      return
-    }
-   
-    tasks[index] = task
-   
-    applyFilters() // Re-apply filter after updating task
+    await updateTasksList()
+    
+    destination = nil
   }
   
   func cancelEditingTaskButtonTapped() {
@@ -91,49 +93,27 @@ import TaskFeature
   
   // MARK: - Sorting and Filtering
   
-  func changeSortOrder(to newOrder: TaskSortOrder) {
+  func changeSortOrder(to newOrder: TaskSortOrder) async {
     selectedSortOrder = newOrder
     
-    Self.sort(tasks: &filteredTasks, by: newOrder)
+    await updateTasksList()
   }
 
-  func changePriorityLevelFilter(to piorityLevel: TaskPiorityLevel?) {
+  func changePriorityLevelFilter(to piorityLevel: TaskPiorityLevel?) async {
     selectedPriorityLevelFilter = piorityLevel
     
-    applyFilters()
+    await updateTasksList()
   }
   
-  private func applyFilters() {
-    var tasksToFilter = tasks
+  private func updateTasksList() async {
+    let currentSortOrder = selectedSortOrder
+    let currentPriorityLevelFilter = selectedPriorityLevelFilter
     
-    if let selectedPriorityLevelFilter {
-      tasksToFilter = tasksToFilter.filter { $0.priorityLevel == selectedPriorityLevelFilter }
-    }
+    let savedTask = try? await taskRepository.fetchAllTasks(
+      sortBy: currentSortOrder,
+      filterBy: currentPriorityLevelFilter
+    )
     
-    Self.sort(tasks: &tasksToFilter, by: selectedSortOrder)
-    
-    filteredTasks = tasksToFilter
-  }
-  
-  private static func sort(tasks: inout [TaskState], by sortOrder: TaskSortOrder) {
-    switch sortOrder {
-    case .creationDateAscending:
-      tasks.sort { $0.creationDate < $1.creationDate }
-      
-    case .creationDateDescending:
-      tasks.sort { $0.creationDate > $1.creationDate }
-      
-    case .dueDateAscending:
-      tasks.sort { $0.dueDate < $1.dueDate }
-      
-    case .dueDateDescending:
-      tasks.sort { $0.dueDate > $1.dueDate }
-      
-    case .priorityAscending:
-      tasks.sort { $0.priorityLevel.rawValue < $1.priorityLevel.rawValue }
-      
-    case .priorityDescending:
-      tasks.sort { $0.priorityLevel.rawValue > $1.priorityLevel.rawValue }
-    }
+    filteredTasks = savedTask ?? []
   }
 }

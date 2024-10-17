@@ -13,7 +13,8 @@ struct TaskViewModelTests {
       priorityLevel: .low,
       status: .inProgress,
       dueDate: Date(timeIntervalSince1970: 1_000),
-      creationDate: Date(timeIntervalSince1970: 0)
+      creationDate: Date(timeIntervalSince1970: 0),
+      category: nil
     )
     let sut = TaskViewModel(taskMock: emptyTaskMock)
     
@@ -50,7 +51,7 @@ struct TaskViewModelTests {
     #expect(sut.task.dueDate == Date(timeIntervalSince1970: 123_456_789))
   }
   
-  @Test func saveButtonTapped_whenNameValidationFails() {
+  @Test func saveButtonTapped_whenNameValidationFails() async {
     let taskNameValidatorSpy = TaskNameValidatorSpy()
     taskNameValidatorSpy.returnType = { .failure("name error message") }
     let taskDueDateValidatorSpy = TaskDueDateValidatorSpy()
@@ -61,12 +62,12 @@ struct TaskViewModelTests {
       taskDueDateValidatorSpy: taskDueDateValidatorSpy
     )
     
-    sut.saveButtonTapped()
+    await sut.saveButtonTapped()
     
     #expect(sut.destination == .validationAlert(message: "name error message"))
   }
   
-  @Test func saveButtonTapped_whenDueDateValidationFails() {
+  @Test func saveButtonTapped_whenDueDateValidationFails() async {
     let taskNameValidatorSpy = TaskNameValidatorSpy()
     taskNameValidatorSpy.returnType = { .success }
     let taskDueDateValidatorSpy = TaskDueDateValidatorSpy()
@@ -77,12 +78,12 @@ struct TaskViewModelTests {
       taskDueDateValidatorSpy: taskDueDateValidatorSpy
     )
     
-    sut.saveButtonTapped()
+    await sut.saveButtonTapped()
     
     #expect(sut.destination == .validationAlert(message: "due date error message"))
   }
   
-  @Test func saveButtonTapped_whenBothValidationsFail() {
+  @Test func saveButtonTapped_whenBothValidationsFail() async {
     let taskNameValidatorSpy = TaskNameValidatorSpy()
     taskNameValidatorSpy.returnType = { .failure("name error message") }
     let taskDueDateValidatorSpy = TaskDueDateValidatorSpy()
@@ -93,12 +94,12 @@ struct TaskViewModelTests {
       taskDueDateValidatorSpy: taskDueDateValidatorSpy
     )
     
-    sut.saveButtonTapped()
+    await sut.saveButtonTapped()
     
     #expect(sut.destination == .validationAlert(message: "name error message"))
   }
   
-  @Test func saveButtonTapped_whenAllValidationsSucceed() {
+  @Test func saveButtonTapped_whenAllValidationsSucceed() async {
     let taskNameValidatorSpy = TaskNameValidatorSpy()
     taskNameValidatorSpy.returnType = { .success }
     let taskDueDateValidatorSpy = TaskDueDateValidatorSpy()
@@ -113,7 +114,7 @@ struct TaskViewModelTests {
       taskDueDateValidatorSpy: taskDueDateValidatorSpy
     )
     
-    sut.saveButtonTapped()
+    await sut.saveButtonTapped()
     
     #expect(sut.destination == nil)
     #expect(wasOnSaveCalled == true)
@@ -161,7 +162,8 @@ extension TaskState {
     priorityLevel: .low,
     status: .inProgress,
     dueDate: Date(timeIntervalSince1970: 1_000_000_000),
-    creationDate: Date(timeIntervalSince1970: 800_000_000)
+    creationDate: Date(timeIntervalSince1970: 800_000_000),
+    category: nil
   )
 }
 
