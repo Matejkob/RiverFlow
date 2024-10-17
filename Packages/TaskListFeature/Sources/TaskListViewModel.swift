@@ -19,7 +19,7 @@ import LocalNotificationsService
   @Published var selectedPriorityLevelFilter: TaskPiorityLevel?
   @Published var selectedSortOrder: TaskSortOrder = .creationDateAscending
   
-  private let taskRepository: TaskRepository
+  let taskRepository: TaskRepository
   private var userPreferencesRepository: UserPreferencesRepository
   private let localNotificationsService: LocalNotificationsService
   private let uuid: () -> UUID
@@ -122,7 +122,9 @@ import LocalNotificationsService
     await updateTasksList()
     
     if case let .edit(initalTask) = destination {
-      if initalTask.reminderTime == nil {
+      if case .completed = initalTask.status {
+        localNotificationsService.cancelNotification(for: task)
+      } else if initalTask.reminderTime == nil {
         localNotificationsService.scheduleNotification(for: task)
       } else {
         localNotificationsService.updateNotification(for: task)

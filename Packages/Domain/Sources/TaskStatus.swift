@@ -1,8 +1,9 @@
 import Foundation
 
-public enum TaskStatus: Equatable, Hashable, Sendable {
+public enum TaskStatus: CaseIterable, Identifiable, Equatable, Hashable, Sendable {
   case pending
   case inProgress
-  case completed(completionDate: Date)
-  case removed
+  case completed
+  
+  public var id: Self { self }
 }

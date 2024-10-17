@@ -27,7 +27,6 @@ public final class GRDBTaskRepository: TaskRepository, Sendable {
         t.column("creationDate", .datetime).notNull()
         t.column("categoryId", .text).references("categories", onDelete: .setNull)
         t.column("categoryName", .text)
-        t.column("completionDate", .datetime) // Nullable for `TaskStatus.completed`
       }
     }
   }
@@ -143,14 +142,12 @@ public final class GRDBTaskRepository: TaskRepository, Sendable {
   
   private static func taskState(from row: Row) -> TaskState? {
     let status: TaskStatus
-    if let completionDate = row["completionDate"] as? Date {
-      status = .completed(completionDate: completionDate)
-    } else if row["status"] == 0 {
+    if row["status"] == 0 {
       status = .pending
     } else if row["status"] == 1 {
       status = .inProgress
     } else {
-      status = .removed
+      status = .completed
     }
     
     let category: TaskCategory?
@@ -181,21 +178,14 @@ public final class GRDBTaskRepository: TaskRepository, Sendable {
   
   private static func save(task: TaskState, in db: Database) throws {
     let statusValue: Int
-    let completionDate: Date?
     
     switch task.status {
     case .pending:
       statusValue = 0
-      completionDate = nil
     case .inProgress:
       statusValue = 1
-      completionDate = nil
-    case .completed(let date):
+    case .completed:
       statusValue = 2
-      completionDate = date
-    case .removed:
-      statusValue = 3
-      completionDate = nil
     }
     
     let categoryId = task.category?.id.uuidString
@@ -203,8 +193,8 @@ public final class GRDBTaskRepository: TaskRepository, Sendable {
     
     try db.execute(
       sql: """
-       INSERT OR REPLACE INTO tasks (id, name, priorityLevel, status, dueDate, reminderTime, creationDate, categoryId, categoryName, completionDate)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+       INSERT OR REPLACE INTO tasks (id, name, priorityLevel, status, dueDate, reminderTime, creationDate, categoryId, categoryName)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
        """,
       arguments: [
         task.id.uuidString,
@@ -215,8 +205,7 @@ public final class GRDBTaskRepository: TaskRepository, Sendable {
         task.reminderTime,
         task.creationDate,
         categoryId,
-        categoryName,
-        completionDate
+        categoryName
       ]
     )
   }

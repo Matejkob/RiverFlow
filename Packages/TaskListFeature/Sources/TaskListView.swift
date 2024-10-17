@@ -39,7 +39,8 @@ public struct TaskListView: View {
             },
             onCancel: {
               viewModel.cancelAddingNewTaskButtonTapped()
-            }
+            },
+            taskRepository: viewModel.taskRepository
           ),
           mode: .add
         )
@@ -53,7 +54,8 @@ public struct TaskListView: View {
             },
             onCancel: {
               viewModel.cancelEditingTaskButtonTapped()
-            }
+            },
+            taskRepository: viewModel.taskRepository
           ),
           mode: .edit
         )

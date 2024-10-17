@@ -2,6 +2,7 @@ import SwiftUI
 import Domain
 import DomainStyling
 import SwiftUINavigation
+import InMemoryTaskRepository
 
 public struct TaskView: View {
   public enum Mode {
@@ -33,6 +34,8 @@ public struct TaskView: View {
         
         reminderTimeSection
           .disabled(!viewModel.notificationEnabled)
+        
+        categorySection
       }
       #if !os(macOS)
       .navigationBarTitleDisplayMode(.inline)
@@ -49,7 +52,17 @@ public struct TaskView: View {
           Text(validationResultMessage)
         }
       )
+      .alert(
+        item: $viewModel.destination.addNewCategory,
+        title: { _ in Text("Create new category") },
+        actions: { _ in
+          TextField("Enter category name", text: $viewModel.newCategoryName)
+          Button("Cancel") { viewModel.addNewCategoryCancelButtonTapped() }
+          Button("Save") { Task { await viewModel.addNewCategorySaveButtonTapped() } }
+        }
+      )
     }
+    .task { await viewModel.onAppear() }
   }
   
   // MARK: - Sections
@@ -83,14 +96,22 @@ public struct TaskView: View {
       .pickerStyle(.segmented)
     }
   }
-  
+
   private var statusSection: some View {
     Section("Status") {
-      HStack {
-        Text(viewModel.task.status.name)
-        Spacer()
-        viewModel.task.status.icon
+      Picker(
+        "Select a status:",
+        selection: Binding(
+          get: { viewModel.task.status },
+          set: { viewModel.statusChanged(to: $0) }
+        )
+      ) {
+        ForEach(TaskStatus.allCases) { status in
+          Text(status.name)
+            .tag(status)
+        }
       }
+      .pickerStyle(.inline)
     }
   }
   
@@ -138,6 +159,33 @@ public struct TaskView: View {
     }
   }
   
+  private var categorySection: some View {
+    Section("Category") {
+      Picker(
+        "Task Category",
+        selection: Binding<TaskCategory?>(
+          get: { viewModel.task.category },
+          set: { viewModel.categoryChanged(to: $0) }
+        )
+      ) {
+        Text("None")
+          .tag(TaskCategory?.none)
+        
+        ForEach(viewModel.categories) { category in
+          Text(category.name)
+            .tag(Optional(category))
+        }
+      }
+      .pickerStyle(.navigationLink)
+      
+      Button {
+        viewModel.addNewCategoryButtonTapped()
+      } label: {
+        Label("Add New Category", systemImage: "plus")
+      }
+    }
+  }
+
   // MARK: - Toolbar
   
   @ToolbarContentBuilder
@@ -174,8 +222,9 @@ public struct TaskView: View {
         creationDate: Date(),
         category: TaskCategory(id: UUID(), name: "Work")
       ),
-      onSave: { _ in },
-      onCancel: { }
+      onSave: { print("Saved \($0)") },
+      onCancel: { },
+      taskRepository: .inMemory
     ),
     mode: .add
   )

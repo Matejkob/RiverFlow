@@ -1,4 +1,5 @@
 import Combine
+import TaskRepository
 import Domain
 import Foundation
 import CasePaths
@@ -9,11 +10,14 @@ import DefaultUserPreferencesRepository
   @CasePathable
   public enum Destination: Equatable {
     case validationAlert(message: String)
+    case addNewCategory
   }
   
   @Published var task: TaskState
   @Published var reminderTimeEnabled: Bool
   @Published var notificationEnabled: Bool
+  @Published var categories: [TaskCategory] = []
+  @Published var newCategoryName: String = ""
   @Published var destination: Destination?
   
   private let onSave: (TaskState) async -> Void
@@ -21,6 +25,9 @@ import DefaultUserPreferencesRepository
   private let taskNameValidator: TaskNameValidatorProtocol
   private let taskDueDateValidator: TaskDueDateValidatorProtocol
   private let userPreferencesRepository: UserPreferencesRepository
+  private let taskRepository: TaskRepository
+  private let now: () -> Date
+  private let uuid: () -> UUID
   
   public init(
     task: TaskState,
@@ -29,7 +36,10 @@ import DefaultUserPreferencesRepository
     onCancel: @escaping () -> Void,
     taskNameValidator: TaskNameValidatorProtocol = TaskNameValidator(),
     taskDueDateValidator: TaskDueDateValidatorProtocol = TaskDueDateValidator(),
-    userPreferencesRepository: UserPreferencesRepository = .userDefaults
+    userPreferencesRepository: UserPreferencesRepository = .userDefaults,
+    taskRepository: TaskRepository,
+    now: @escaping () -> Date = Date.init,
+    uuid: @escaping () -> UUID = UUID.init
   ) {
     self.task = task
     self.reminderTimeEnabled = task.reminderTime != nil
@@ -39,15 +49,29 @@ import DefaultUserPreferencesRepository
     self.taskNameValidator = taskNameValidator
     self.taskDueDateValidator = taskDueDateValidator
     self.userPreferencesRepository = userPreferencesRepository
+    self.taskRepository = taskRepository
+    self.now = now
+    self.uuid = uuid
+    
     notificationEnabled = userPreferencesRepository.notificationsEnabled
   }
 
+  func onAppear() async {
+    let savedCategories = try? await taskRepository.fetchAllCategories()
+    
+    categories = savedCategories ?? []
+  }
+  
   func nameChanged(to name: String) {
     task.name = name
   }
   
   func priorityLevelChanged(to priorityLevel: TaskPiorityLevel) {
     task.priorityLevel = priorityLevel
+  }
+  
+  func statusChanged(to newTaskStatus: TaskStatus) {
+    task.status = newTaskStatus
   }
   
   func dueDateChanged(to dueDate: Date) {
@@ -67,6 +91,35 @@ import DefaultUserPreferencesRepository
   
   func reminderTimeChanged(to newReminderTime: TimeInterval) {
     task.reminderTime = newReminderTime
+  }
+  
+  func categoryChanged(to newCategory: TaskCategory?) {
+    task.category = newCategory
+  }
+  
+  func addNewCategoryButtonTapped() {
+    destination = .addNewCategory
+  }
+  
+  func addNewCategoryCancelButtonTapped() {
+    destination = nil
+  }
+  
+  func addNewCategorySaveButtonTapped() async {
+    defer { destination = nil }
+    
+    if newCategoryName.isEmpty { return }
+    
+    let newCategory = TaskCategory(id: uuid(), name: newCategoryName)
+    try? await taskRepository.saveCategory(newCategory)
+    
+    newCategoryName = ""
+    
+    let savedCategory = try? await taskRepository.fetchAllCategories()
+    
+    categories = savedCategory ?? []
+    
+    task.category = newCategory
   }
   
   func saveButtonTapped() async {

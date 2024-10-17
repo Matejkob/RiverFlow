@@ -6,13 +6,19 @@ struct TaskRowView: View {
   let task: TaskState
   
   var body: some View {
-    VStack(alignment: .leading) {
+    VStack(alignment: .leading, spacing: 12) {
       taskNameView
       
       HStack {
         taskDateView
         Spacer()
         taskPriorityLevelView
+      }
+      
+      HStack {
+        taskStatusView
+        Spacer()
+        taskCategoryView
       }
     }
     .foregroundStyle(Color.primary)
@@ -33,6 +39,27 @@ struct TaskRowView: View {
     Text(task.priorityLevel.name)
       .font(.subheadline)
       .foregroundStyle(task.priorityLevel.color)
+  }
+  
+  private var taskStatusView: some View {
+    HStack {
+      Text(task.status.name)
+        .font(.subheadline)
+      task.status.icon
+    }
+    .foregroundStyle(task.status.color)
+  }
+  
+  private var taskCategoryView: some View {
+    if let category = task.category {
+      Text(category.name)
+        .font(.subheadline)
+        .foregroundColor(.secondary)
+    } else {
+      Text("No Category")
+        .font(.subheadline)
+        .foregroundColor(.gray)
+    }
   }
   
   private let dueDateFormatter: DateFormatter = {
@@ -74,7 +101,7 @@ struct TaskRowView: View {
         id: UUID(),
         name: "Hire Mateusz Bąk",
         priorityLevel: .low,
-        status: .completed(completionDate: Date()),
+        status: .completed,
         reminderTime: nil,
         dueDate: Date() + 60 * 60 * 4,
         creationDate: Date(),

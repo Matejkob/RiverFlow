@@ -10,8 +10,6 @@ extension TaskStatus {
       "In Progress"
     case .completed:
       "Completed"
-    case .removed:
-      "Removed"
     }
   }
 
@@ -23,21 +21,17 @@ extension TaskStatus {
       Image(systemName: "arrow.triangle.2.circlepath.circle")
     case .completed:
       Image(systemName: "checkmark.circle")
-    case .removed:
-      Image(systemName: "trash")
     }
   }
   
   public var color: Color {
     switch self {
     case .pending:
-      .yellow
+      .gray
     case .inProgress:
       .blue
     case .completed:
       .green
-    case .removed:
-      .red
     }
   }
 }
