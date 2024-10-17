@@ -1,6 +1,7 @@
 import SwiftUI
 import Domain
 import DomainStyling
+import SwiftUINavigation
 
 public struct TaskView: View {
   public enum Mode {
@@ -35,6 +36,16 @@ public struct TaskView: View {
       #endif
       .navigationTitle(navigationTitle)
       .toolbar { toolbarContent }
+      .alert(
+        item: $viewModel.destination.validationAlert,
+        title: { _ in Text("Validation error") },
+        actions: { _ in
+          Button("Cancel") { viewModel.cancelValidationAlertButtonTapped() }
+        },
+        message: { validationResultMessage in
+          Text(validationResultMessage)
+        }
+      )
     }
   }
   
