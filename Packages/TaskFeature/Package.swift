@@ -17,6 +17,7 @@ let package = Package(
   dependencies: [
     .package(path: "../Domain"),
     .package(path: "../DomainStyling"),
+    .package(path: "../PersistenceStore"),
     .package(url: "https://github.com/pointfreeco/swift-case-paths.git", from: "1.5.6"),
     .package(url: "https://github.com/pointfreeco/swift-navigation", from: "2.2.2"),
   ],
@@ -26,6 +27,8 @@ let package = Package(
       dependencies: [
         "Domain",
         "DomainStyling",
+        .product(name: "UserPreferencesRepository", package: "PersistenceStore"),
+        .product(name: "DefaultUserPreferencesRepository", package: "PersistenceStore"),
         .product(name: "CasePaths", package: "swift-case-paths"),
         .product(name: "SwiftUINavigation", package: "swift-navigation"),
       ],

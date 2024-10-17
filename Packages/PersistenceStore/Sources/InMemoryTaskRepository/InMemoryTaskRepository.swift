@@ -108,6 +108,7 @@ private enum Mocks {
       name: "Task 3",
       priorityLevel: .high,
       status: .inProgress,
+      reminderTime: nil,
       dueDate: Date() + 60 * 4,
       creationDate: Date() - 60,
       category: TaskCategory(id: UUID(), name: "Work")
@@ -117,6 +118,7 @@ private enum Mocks {
       name: "Task 3.1",
       priorityLevel: .medium,
       status: .inProgress,
+      reminderTime: nil,
       dueDate: Date() + 60 * 7,
       creationDate: Date() - 60,
       category: TaskCategory(id: UUID(), name: "Work")
@@ -126,6 +128,7 @@ private enum Mocks {
       name: "Task 2",
       priorityLevel: .medium,
       status: .inProgress,
+      reminderTime: nil,
       dueDate: Date() + 60 * 2,
       creationDate: Date() - 60 * 2,
       category: TaskCategory(id: UUID(), name: "Personal")
@@ -135,6 +138,7 @@ private enum Mocks {
       name: "Task 2.1",
       priorityLevel: .low,
       status: .inProgress,
+      reminderTime: nil,
       dueDate: Date() + 60 * 20,
       creationDate: Date() - 60 * 2,
       category: TaskCategory(id: UUID(), name: "Work")
@@ -144,6 +148,7 @@ private enum Mocks {
       name: "Task 1",
       priorityLevel: .low,
       status: .inProgress,
+      reminderTime: nil,
       dueDate: Date() + 60 * 100,
       creationDate: Date() - 60 * 3,
       category: TaskCategory(id: UUID(), name: "Personal")
@@ -153,6 +158,7 @@ private enum Mocks {
       name: "Task 1.1",
       priorityLevel: .high,
       status: .inProgress,
+      reminderTime: nil,
       dueDate: Date() + 60 * 3,
       creationDate: Date() - 60 * 3,
       category: nil

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		451CD12C2CC171B2004DD043 /* LocalNotificationsService in Frameworks */ = {isa = PBXBuildFile; productRef = 451CD12B2CC171B2004DD043 /* LocalNotificationsService */; };
+		451CD12E2CC171B2004DD043 /* UILocalNotificationsService in Frameworks */ = {isa = PBXBuildFile; productRef = 451CD12D2CC171B2004DD043 /* UILocalNotificationsService */; };
+		451CD1302CC171B2004DD043 /* DefaultUserPreferencesRepository in Frameworks */ = {isa = PBXBuildFile; productRef = 451CD12F2CC171B2004DD043 /* DefaultUserPreferencesRepository */; };
+		451CD1322CC171B2004DD043 /* UserPreferencesRepository in Frameworks */ = {isa = PBXBuildFile; productRef = 451CD1312CC171B2004DD043 /* UserPreferencesRepository */; };
 		4522F5092CC11CE900870BFE /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 4522F5082CC11CE900870BFE /* Domain */; };
 		4522F50B2CC11CE900870BFE /* DomainStyling in Frameworks */ = {isa = PBXBuildFile; productRef = 4522F50A2CC11CE900870BFE /* DomainStyling */; };
 		4522F50D2CC11CE900870BFE /* GRDBTaskRepository in Frameworks */ = {isa = PBXBuildFile; productRef = 4522F50C2CC11CE900870BFE /* GRDBTaskRepository */; };
@@ -37,6 +41,7 @@
 		451250EA2CBECA7500FB9D2A /* RiverFlow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RiverFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		451250FB2CBECA7700FB9D2A /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		451251052CBECA7700FB9D2A /* UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		451CD12A2CC16E14004DD043 /* LocalNotificationsService */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = LocalNotificationsService; path = Packages/LocalNotificationsService; sourceTree = "<group>"; };
 		456DF4BD2CBEE4F100BA3E3F /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Domain; path = Packages/Domain; sourceTree = "<group>"; };
 		456DF4BF2CBEE56D00BA3E3F /* TaskListFeature */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = TaskListFeature; path = Packages/TaskListFeature; sourceTree = "<group>"; };
 		456DF4C02CBEE59100BA3E3F /* TaskFeature */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = TaskFeature; path = Packages/TaskFeature; sourceTree = "<group>"; };
@@ -68,13 +73,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				451CD1322CC171B2004DD043 /* UserPreferencesRepository in Frameworks */,
 				4522F5132CC11CE900870BFE /* TaskFeature in Frameworks */,
+				451CD12E2CC171B2004DD043 /* UILocalNotificationsService in Frameworks */,
 				4522F5092CC11CE900870BFE /* Domain in Frameworks */,
 				4522F50F2CC11CE900870BFE /* InMemoryTaskRepository in Frameworks */,
 				4522F50D2CC11CE900870BFE /* GRDBTaskRepository in Frameworks */,
 				4522F50B2CC11CE900870BFE /* DomainStyling in Frameworks */,
 				4522F5152CC11CE900870BFE /* TaskListFeature in Frameworks */,
 				4522F5112CC11CE900870BFE /* TaskRepository in Frameworks */,
+				451CD1302CC171B2004DD043 /* DefaultUserPreferencesRepository in Frameworks */,
+				451CD12C2CC171B2004DD043 /* LocalNotificationsService in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,6 +107,7 @@
 		451250E12CBECA7500FB9D2A = {
 			isa = PBXGroup;
 			children = (
+				451CD12A2CC16E14004DD043 /* LocalNotificationsService */,
 				45AF27832CC0FE30006E845A /* PersistenceStore */,
 				456DF4BD2CBEE4F100BA3E3F /* Domain */,
 				45D968AD2CBFA23900557A43 /* DomainStyling */,
@@ -156,6 +166,10 @@
 				4522F5102CC11CE900870BFE /* TaskRepository */,
 				4522F5122CC11CE900870BFE /* TaskFeature */,
 				4522F5142CC11CE900870BFE /* TaskListFeature */,
+				451CD12B2CC171B2004DD043 /* LocalNotificationsService */,
+				451CD12D2CC171B2004DD043 /* UILocalNotificationsService */,
+				451CD12F2CC171B2004DD043 /* DefaultUserPreferencesRepository */,
+				451CD1312CC171B2004DD043 /* UserPreferencesRepository */,
 			);
 			productName = RiverFlow;
 			productReference = 451250EA2CBECA7500FB9D2A /* RiverFlow.app */;
@@ -629,6 +643,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		451CD12B2CC171B2004DD043 /* LocalNotificationsService */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LocalNotificationsService;
+		};
+		451CD12D2CC171B2004DD043 /* UILocalNotificationsService */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UILocalNotificationsService;
+		};
+		451CD12F2CC171B2004DD043 /* DefaultUserPreferencesRepository */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DefaultUserPreferencesRepository;
+		};
+		451CD1312CC171B2004DD043 /* UserPreferencesRepository */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UserPreferencesRepository;
+		};
 		4522F5082CC11CE900870BFE /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Domain;

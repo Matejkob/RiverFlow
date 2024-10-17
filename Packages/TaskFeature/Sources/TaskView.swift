@@ -30,6 +30,9 @@ public struct TaskView: View {
         statusSection
         
         dueDateSection
+        
+        reminderTimeSection
+          .disabled(!viewModel.notificationEnabled)
       }
       #if !os(macOS)
       .navigationBarTitleDisplayMode(.inline)
@@ -103,6 +106,38 @@ public struct TaskView: View {
     }
   }
   
+  // MARK: - Reminder Time Section
+  
+  private var reminderTimeSection: some View {
+    Section("Reminder") {
+      VStack {
+        Toggle(
+          "Enable Reminder",
+          isOn: Binding(
+            get: { viewModel.reminderTimeEnabled },
+            set: { viewModel.reminderTimeToggled(to: $0) }
+          )
+        )
+        
+        if viewModel.reminderTimeEnabled {
+          Picker(
+            "Reminder Time",
+            selection: Binding(
+              get: { viewModel.task.reminderTime ?? 1 },
+              set: { viewModel.reminderTimeChanged(to: $0) }
+            )
+          ) {
+            ForEach(1..<16) { minute in
+              Text("\(minute) minute\(minute == 1 ? "" : "s") before")
+                .tag(TimeInterval(minute))
+            }
+          }
+          .pickerStyle(.wheel)
+        }
+      }
+    }
+  }
+  
   // MARK: - Toolbar
   
   @ToolbarContentBuilder
@@ -134,6 +169,7 @@ public struct TaskView: View {
         name: "Finish todo app",
         priorityLevel: .high,
         status: .inProgress,
+        reminderTime: nil,
         dueDate: Date() + 60 * 60,
         creationDate: Date(),
         category: TaskCategory(id: UUID(), name: "Work")

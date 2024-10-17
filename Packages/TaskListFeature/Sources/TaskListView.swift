@@ -5,6 +5,7 @@ import SwiftUINavigation
 import TaskFeature
 import InMemoryTaskRepository
 import DefaultUserPreferencesRepository
+import LocalNotificationsService
 
 public struct TaskListView: View {
   @ObservedObject private var viewModel: TaskListViewModel
@@ -121,7 +122,8 @@ public struct TaskListView: View {
   TaskListView(
     viewModel: TaskListViewModel(
       taskRepository: .inMemory,
-      userPreferencesRepository: .userDefaults
+      userPreferencesRepository: .userDefaults,
+      localNotificationsService: .preview
     )
   )
 }

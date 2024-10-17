@@ -5,6 +5,7 @@ import TaskFeature
 import TaskRepository
 import UserPreferencesRepository
 import Combine
+import LocalNotificationsService
 
 @MainActor public final class TaskListViewModel: ObservableObject, Sendable {
   @CasePathable
@@ -20,6 +21,7 @@ import Combine
   
   private let taskRepository: TaskRepository
   private var userPreferencesRepository: UserPreferencesRepository
+  private let localNotificationsService: LocalNotificationsService
   private let uuid: () -> UUID
   private let now: () -> Date
   
@@ -29,12 +31,14 @@ import Combine
     destination: Destination? = nil,
     taskRepository: TaskRepository,
     userPreferencesRepository: UserPreferencesRepository,
+    localNotificationsService: LocalNotificationsService,
     uuid: @escaping () -> UUID = UUID.init,
     now: @escaping () -> Date = { Date.now }
   ) {
     self.destination = destination
     self.taskRepository = taskRepository
     self.userPreferencesRepository = userPreferencesRepository
+    self.localNotificationsService = localNotificationsService
     self.uuid = uuid
     self.now = now
     
@@ -71,7 +75,8 @@ import Combine
         name: "",
         priorityLevel: .low,
         status: .pending,
-        dueDate: now() + 60 * 60 * 24,
+        reminderTime: nil,
+        dueDate: now() + 60 * 10, // 10 minutes after now
         creationDate: now(),
         category: nil
       )
@@ -89,6 +94,8 @@ import Combine
     
     for task in taskToDelete {
       try? await taskRepository.deleteTask(task)
+      
+      localNotificationsService.cancelNotification(for: task)
     }
     
     // We don't need to fetch tasks here again
@@ -99,6 +106,8 @@ import Combine
     try? await taskRepository.saveTask(task)
     
     await updateTasksList()
+    
+    localNotificationsService.scheduleNotification(for: task)
     
     destination = nil
   }
@@ -112,6 +121,14 @@ import Combine
     
     await updateTasksList()
     
+    if case let .edit(initalTask) = destination {
+      if initalTask.reminderTime == nil {
+        localNotificationsService.scheduleNotification(for: task)
+      } else {
+        localNotificationsService.updateNotification(for: task)
+      }
+    }
+        
     destination = nil
   }
   

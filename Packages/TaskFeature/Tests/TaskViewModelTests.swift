@@ -12,6 +12,7 @@ struct TaskViewModelTests {
       name: "",
       priorityLevel: .low,
       status: .inProgress,
+      reminderTime: nil,
       dueDate: Date(timeIntervalSince1970: 1_000),
       creationDate: Date(timeIntervalSince1970: 0),
       category: nil
@@ -161,6 +162,7 @@ extension TaskState {
     name: "Hire Mateusz Bąk",
     priorityLevel: .low,
     status: .inProgress,
+    reminderTime: nil,
     dueDate: Date(timeIntervalSince1970: 1_000_000_000),
     creationDate: Date(timeIntervalSince1970: 800_000_000),
     category: nil

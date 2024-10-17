@@ -13,6 +13,7 @@ struct TaskListViewModelTests {
     let sut = TaskListViewModel(
       taskRepository: .inMemory,
       userPreferencesRepository: .spy,
+      localNotificationsService: .spy,
       uuid: { uuid },
       now: { now }
     )
@@ -26,7 +27,8 @@ struct TaskListViewModelTests {
           name: "",
           priorityLevel: .low,
           status: .pending,
-          dueDate: now + 60 * 60 * 24,
+          reminderTime: nil,
+          dueDate: now + 60 * 10,
           creationDate: now,
           category: nil
         )
@@ -38,7 +40,8 @@ struct TaskListViewModelTests {
     let task = TaskState.mock
     let sut = TaskListViewModel(
       taskRepository: InMemoryTaskRepository(tasks: [task]),
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     await sut.onAppear() // Load data
@@ -51,7 +54,8 @@ struct TaskListViewModelTests {
   @Test func deleteTask() async {
     let sut = TaskListViewModel(
       taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3]),
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     await sut.onAppear() // Load data
@@ -65,7 +69,8 @@ struct TaskListViewModelTests {
   @Test func deleteTasksRange() async {
     let sut = TaskListViewModel(
       taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3]),
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     await sut.onAppear() // Load data
@@ -80,7 +85,8 @@ struct TaskListViewModelTests {
     let task = TaskState.mock
     let sut = TaskListViewModel(
       taskRepository: InMemoryTaskRepository(tasks: []),
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     await sut.saveNewTaskButtonTapped(task)
@@ -94,7 +100,8 @@ struct TaskListViewModelTests {
     let sut = TaskListViewModel(
       destination: .add(TaskState.mock),
       taskRepository: .inMemory,
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     sut.cancelAddingNewTaskButtonTapped()
@@ -109,6 +116,7 @@ struct TaskListViewModelTests {
       name: "Updated Task",
       priorityLevel: .high,
       status: .inProgress,
+      reminderTime: nil,
       dueDate: Date(timeIntervalSince1970: 1_000_555_555),
       creationDate: Date(timeIntervalSince1970: 850_000_000),
       category: nil
@@ -116,7 +124,8 @@ struct TaskListViewModelTests {
     
     let sut = TaskListViewModel(
       taskRepository: InMemoryTaskRepository(tasks: [.mock2, task, .mock3]),
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     await sut.onAppear() // Load data
@@ -132,7 +141,8 @@ struct TaskListViewModelTests {
     let sut = TaskListViewModel(
       destination: .edit(TaskState.mock),
       taskRepository: .inMemory,
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     sut.cancelEditingTaskButtonTapped()
@@ -145,7 +155,8 @@ struct TaskListViewModelTests {
   @Test func changeSortOrderToDueDateAscending() async {
     let sut = TaskListViewModel(
       taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3]),
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     await sut.changeSortOrder(to: .dueDateAscending)
@@ -156,7 +167,8 @@ struct TaskListViewModelTests {
   @Test func changeSortOrderToDueDateDescending() async {
     let sut = TaskListViewModel(
       taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3]),
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     await sut.changeSortOrder(to: .dueDateDescending)
@@ -170,7 +182,8 @@ struct TaskListViewModelTests {
     let task3 = TaskState.mockMediumPriority
     let sut = TaskListViewModel(
       taskRepository: InMemoryTaskRepository(tasks: [task1, task2, task3]),
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     await sut.changeSortOrder(to: .priorityAscending)
@@ -184,7 +197,8 @@ struct TaskListViewModelTests {
     let task3 = TaskState.mockMediumPriority
     let sut = TaskListViewModel(
       taskRepository: InMemoryTaskRepository(tasks: [task1, task2, task3]),
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     await sut.changeSortOrder(to: .priorityDescending)
@@ -195,7 +209,8 @@ struct TaskListViewModelTests {
   @Test func changeSortOrderToCreationDateAscending() async {
     let sut = TaskListViewModel(
       taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3]),
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     await sut.changeSortOrder(to: .creationDateAscending)
@@ -206,7 +221,8 @@ struct TaskListViewModelTests {
   @Test func changeSortOrderToCreationDateDescending() async {
     let sut = TaskListViewModel(
       taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3]),
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     await sut.changeSortOrder(to: .creationDateDescending)
@@ -219,7 +235,8 @@ struct TaskListViewModelTests {
   @Test func changePriorityLevelFilter() async {
     let sut = TaskListViewModel(
       taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3]),
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     await sut.changePriorityLevelFilter(to: .low)
@@ -230,7 +247,8 @@ struct TaskListViewModelTests {
   @Test func changePriorityLevelFilterToHigh() async {
     let sut = TaskListViewModel(
       taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3]),
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     await sut.changePriorityLevelFilter(to: .high)
@@ -243,7 +261,8 @@ struct TaskListViewModelTests {
     let task2 = TaskState.mockMediumPriority
     let sut = TaskListViewModel(
       taskRepository: InMemoryTaskRepository(tasks: [task1, task2, .mock3]),
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     await sut.changePriorityLevelFilter(to: .medium)
@@ -254,7 +273,8 @@ struct TaskListViewModelTests {
   @Test func clearPriorityLevelFilter() async {
     let sut = TaskListViewModel(
       taskRepository: InMemoryTaskRepository(tasks: [.mock, .mock2, .mock3]),
-      userPreferencesRepository: .spy
+      userPreferencesRepository: .spy,
+      localNotificationsService: .spy
     )
     
     await sut.changePriorityLevelFilter(to: .low)
@@ -273,7 +293,8 @@ struct TaskListViewModelTests {
     
     let sut = TaskListViewModel(
       taskRepository: .inMemory,
-      userPreferencesRepository: userPreferencesRepositorySpy
+      userPreferencesRepository: userPreferencesRepositorySpy,
+      localNotificationsService: .spy
     )
     
     #expect(sut.selectedPriorityLevelFilter == .high)
@@ -287,7 +308,8 @@ struct TaskListViewModelTests {
     
     let sut = TaskListViewModel(
       taskRepository: .inMemory,
-      userPreferencesRepository: userPreferencesRepositorySpy
+      userPreferencesRepository: userPreferencesRepositorySpy,
+      localNotificationsService: .spy
     )
     
     sut.selectedSortOrder = .priorityAscending
@@ -326,6 +348,7 @@ extension TaskState {
     name: "Hire Mateusz Bąk",
     priorityLevel: .low,
     status: .inProgress,
+    reminderTime: nil,
     dueDate: Date(timeIntervalSince1970: 1_000_000_000),
     creationDate: Date(timeIntervalSince1970: 700_000_000),
     category: nil
@@ -336,6 +359,7 @@ extension TaskState {
     name: "TODO: Fix UI",
     priorityLevel: .low,
     status: .inProgress,
+    reminderTime: nil,
     dueDate: Date(timeIntervalSince1970: 1_100_000_000),
     creationDate: Date(timeIntervalSince1970: 800_000_000),
     category: nil
@@ -346,6 +370,7 @@ extension TaskState {
     name: "FIXME: Implement modular navigation",
     priorityLevel: .low,
     status: .inProgress,
+    reminderTime: nil,
     dueDate: Date(timeIntervalSince1970: 1_200_000_000),
     creationDate: Date(timeIntervalSince1970: 900_000_000),
     category: nil
@@ -356,6 +381,7 @@ extension TaskState {
     name: "High Priority Task",
     priorityLevel: .high,
     status: .pending,
+    reminderTime: nil,
     dueDate: Date(timeIntervalSince1970: 1_000_000_000),
     creationDate: Date(timeIntervalSince1970: 800_000_000),
     category: nil
@@ -366,6 +392,7 @@ extension TaskState {
     name: "Medium Priority Task",
     priorityLevel: .medium,
     status: .pending,
+    reminderTime: nil,
     dueDate: Date(timeIntervalSince1970: 1_000_000_000),
     creationDate: Date(timeIntervalSince1970: 900_000_000),
     category: nil

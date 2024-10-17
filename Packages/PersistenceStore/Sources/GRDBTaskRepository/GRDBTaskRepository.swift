@@ -23,6 +23,7 @@ public final class GRDBTaskRepository: TaskRepository, Sendable {
         t.column("priorityLevel", .integer).notNull()
         t.column("status", .integer).notNull()
         t.column("dueDate", .datetime).notNull()
+        t.column("reminderTime", .double)
         t.column("creationDate", .datetime).notNull()
         t.column("categoryId", .text).references("categories", onDelete: .setNull)
         t.column("categoryName", .text)
@@ -171,6 +172,7 @@ public final class GRDBTaskRepository: TaskRepository, Sendable {
       name: row["name"],
       priorityLevel: priorityLevel,
       status: status,
+      reminderTime: row["reminderTime"] as? TimeInterval,
       dueDate: row["dueDate"],
       creationDate: row["creationDate"],
       category: category
@@ -201,15 +203,16 @@ public final class GRDBTaskRepository: TaskRepository, Sendable {
     
     try db.execute(
       sql: """
-      INSERT OR REPLACE INTO tasks (id, name, priorityLevel, status, dueDate, creationDate, categoryId, categoryName, completionDate)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-      """,
+       INSERT OR REPLACE INTO tasks (id, name, priorityLevel, status, dueDate, reminderTime, creationDate, categoryId, categoryName, completionDate)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+       """,
       arguments: [
         task.id.uuidString,
         task.name,
         task.priorityLevel.rawValue,
         statusValue,
         task.dueDate,
+        task.reminderTime,
         task.creationDate,
         categoryId,
         categoryName,

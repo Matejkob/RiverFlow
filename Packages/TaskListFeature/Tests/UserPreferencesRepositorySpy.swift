@@ -59,6 +59,10 @@ class UserPreferencesRepositorySpy: UserPreferencesRepository {
       selectedCategoryFilterIdStub = newValue
     }
   }
+  
+  // MARK: - Notifications Enabled
+  
+  var notificationsEnabled: Bool = false
 }
 
 extension UserPreferencesRepository where Self == UserPreferencesRepositorySpy {

@@ -8,6 +8,7 @@ public final class DefaultUserPreferencesRepository: UserPreferencesRepository {
     static let selectedSortOrder = "selectedSortOrder"
     static let selectedPriorityLevelFilter = "selectedPriorityLevelFilter"
     static let selectedCategoryFilterId = "selectedCategoryFilterID"
+    static let notificationsEnabled = "notificationsEnabled"
   }
   
   private let userDefaults: UserDefaults
@@ -53,6 +54,11 @@ public final class DefaultUserPreferencesRepository: UserPreferencesRepository {
     set {
       userDefaults.set(newValue?.uuidString, forKey: Keys.selectedCategoryFilterId)
     }
+  }
+  
+  public var notificationsEnabled: Bool {
+    get { userDefaults.bool(forKey: Keys.notificationsEnabled) }
+    set { userDefaults.set(newValue, forKey: Keys.notificationsEnabled) }
   }
 }
 

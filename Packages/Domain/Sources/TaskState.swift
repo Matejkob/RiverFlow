@@ -5,6 +5,7 @@ public struct TaskState: Equatable, Hashable, Identifiable, Sendable {
   public var name: String
   public var priorityLevel: TaskPiorityLevel
   public var status: TaskStatus
+  public var reminderTime: TimeInterval?
   public var dueDate: Date
   public let creationDate: Date
   public var category: TaskCategory?
@@ -14,6 +15,7 @@ public struct TaskState: Equatable, Hashable, Identifiable, Sendable {
     name: String,
     priorityLevel: TaskPiorityLevel,
     status: TaskStatus,
+    reminderTime: TimeInterval?,
     dueDate: Date,
     creationDate: Date,
     category: TaskCategory?
@@ -22,6 +24,7 @@ public struct TaskState: Equatable, Hashable, Identifiable, Sendable {
     self.name = name
     self.priorityLevel = priorityLevel
     self.status = status
+    self.reminderTime = reminderTime
     self.dueDate = dueDate
     self.creationDate = creationDate
     self.category = category
